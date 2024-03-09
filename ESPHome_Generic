@@ -6,7 +6,7 @@ substitutions:
   device_friendly_name: BT-H-T-01
   device_wifi_name: BT-H-T-01
   device_sampling_time: 10s
-  #device_ip_address: 192.168.0.226
+  #device_ip_address: 192.168.x.xxx
 
 ################################################################################
 # Globals
