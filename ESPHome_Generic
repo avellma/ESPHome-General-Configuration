@@ -39,10 +39,11 @@ logger:
 ################################################################################
 # Enable Home Assistant API
 ################################################################################
+
 api:
   reboot_timeout: 0s
   encryption:
-    key: myDFvtJb0OHbE0RoQwk05US3V07n9NgoR840/jNPSvE=
+    key: cYm6Sowl9rieljTw0a30u4eOTBZvnQBKwk7XE9/Ztpg=
     #key: !secret api_encryption_key
 
 ################################################################################
@@ -182,16 +183,16 @@ text_sensor:
   #-------------------------------------------------------------------------------
   # ESP32 internal sensors
   #-------------------------------------------------------------------------------
-  - platform: wifi_info
-    ip_address:
-      name: IP Address
-      id: ${device_internal_name}_ip_address
-    ssid:
-      name: Connected SSID
-      id: ${device_internal_name}_connected_ssid
-    mac_address:
-      name: Mac Wifi Address
-      id: ${device_internal_name}_mac_address
+  #- platform: wifi_info
+    #ip_address:
+      #name: IP Address
+      #id: ${device_internal_name}_ip_address
+    #ssid:
+      #name: Connected SSID
+      #id: ${device_internal_name}_connected_ssid
+    #mac_address:
+      #name: Mac Wifi Address
+      #id: ${device_internal_name}_mac_address
 
   - platform: version
     name: "ESPHome Version"
