@@ -1,12 +1,15 @@
+# This is the Sensor Distance #03
+# This uses a D1 Mini ESP8266
+#
 ################################################################################
 # Substitution Variables
 ################################################################################
 substitutions:
-  device_internal_name: btproxy_ea0678
-  device_friendly_name: BT-H-T-01
-  device_wifi_name: BT-H-T-01
+  device_internal_name: distance_sensor03
+  device_friendly_name: distance_sensor03
+  device_wifi_name: distance_sensor03
   device_sampling_time: 10s
-  #device_ip_address: 192.168.x.xxx
+  device_ip_address: 192.168.86.90
 
 ################################################################################
 # Globals
@@ -18,23 +21,32 @@ globals: ##to set default reboot behavior
     initial_value: "false"
 
 ################################################################################
-# Board Configuration
+# Board Configuration ESP8266
 ################################################################################
 esphome:
   name: ${device_internal_name}
   friendly_name: ${device_friendly_name}
   name_add_mac_suffix: false
+  platform: ESP8266
+  board: d1_mini
 
-esp32:
-  board: esp32dev
-  framework:
-    type: arduino
+################################################################################
+# Board Configuration - ESP32
+################################################################################
+#esphome:
+#  name: ${device_internal_name}
+#  friendly_name: ${device_friendly_name}
+#  name_add_mac_suffix: false
+
+#esp32:
+#  board: esp32dev
+#  framework:
+#    type: arduino
 
 ################################################################################
 # Enable logging
 ################################################################################
 logger:
-
 
 ################################################################################
 # Enable Home Assistant API
@@ -43,8 +55,7 @@ logger:
 api:
   reboot_timeout: 0s
   encryption:
-    key: cYm6Sowl9rieljTw0a30u4eOTBZvnQBKwk7XE9/Ztpg=
-    #key: !secret api_encryption_key
+    key: !secret api_encryption_key
 
 ################################################################################
 # OTA
@@ -53,7 +64,9 @@ ota:
   safe_mode: true
   reboot_timeout: 10min
   num_attempts: 5
- # password: !secret web_server_password
+  password: !secret web_server_password
+
+
 
 ################################################################################
 # WiFi
@@ -63,32 +76,32 @@ wifi:
   networks:
     - ssid: !secret wifi_ssid
       password: !secret wifi_password
-  #manual_ip:
-    #static_ip: ${device_ip_address}
-    #gateway: !secret gateway_address
-    #subnet: !secret subnet_address
+#  manual_ip:
+#    static_ip: ${device_ip_address}
+#    gateway: !secret gateway_address
+#    subnet: !secret subnet_address
 
    # Enable fallback hotspot (captive portal) in case wifi connection fails
-  #ap:
-    #ssid: ${device_wifi_name}
-    #password: !secret web_server_password
+  ap:
+    ssid: ${device_wifi_name}
+    password: !secret web_server_password
 
 captive_portal:
 
 ################################################################################
 # Bluetooth
 ################################################################################
-bluetooth_proxy:
-  active: true
-  #cache_services: true
+#bluetooth_proxy:
+#  active: true
+#  #cache_services: true
 
 # Bluetooth Low Energy Tracker Hub
-esp32_ble_tracker:
-  id: ${device_internal_name}_ble_tracker
-  scan_parameters:
-    interval: 1100ms
-    window: 1100ms
-    active: true
+#esp32_ble_tracker:
+#  id: ${device_internal_name}_ble_tracker
+#  scan_parameters:
+#    interval: 1100ms
+#    window: 1100ms
+#    active: true
 
 ################################################################################
 # Web Server
@@ -105,10 +118,10 @@ esp32_ble_tracker:
 ################################################################################
 # Status led
 ################################################################################
-status_led:
-  pin:
-    number: GPIO2
-    inverted: false
+#status_led:
+#  pin:
+#    number: GPIO2
+#    inverted: false
 
 ################################################################################
 # Time
@@ -163,6 +176,19 @@ sensor:
                 (minutes ? to_string(minutes) + "m " : "") +
                 (to_string(seconds) + "s")
               ).c_str();
+
+
+# Distance sensor
+  - platform: wifi_signal
+    name: "WiFi Signal Sensor"
+    update_interval: 60s          #to display WiFi signal strength
+    
+  - platform: ultrasonic
+    trigger_pin: GPIO5  # Use GPIO numbers, equivalent to D1 on the D1 Mini
+    echo_pin: GPIO4    # Use GPIO numbers, equivalent to D2 on the D1 Mini
+    name: "Distance_03"
+    id: ${device_internal_name}_Distance_03
+    update_interval: ${device_sampling_time}  
 
   # DHT22     
   - platform: dht
@@ -233,3 +259,9 @@ interval:
           else:
             - lambda: |-
                 id(wifi_connection) = false;
+
+
+# End ------------------------------------------------------------
+
+
+
